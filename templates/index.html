@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>豆瓣读后感首页</title>
+</head>
+<body>
+    <div>
+        <h1>文章首页</h1>
+        <a href="{{ url_for('pull') }}"><h4>发布文章</h4></a>
+    </div>
+    <table>
+        <tr>
+            <th>序号</th>
+            <th>文章标题</th>
+            <th>作者</th>
+            <th>发布时间</th>
+        </tr>
+        {% for article in articles %}
+
+        <tr>
+            <td>{{ article.id }}</td>
+            <td><a href="{{ url_for('detail',id=article['id']) }}">{{ article.title }}</a></td>
+            {% if article.author.id %}
+                <td><a href="{{ url_for('author',user_id=article.author.id) }}">{{ article.author.name }}</a></td>
+            {% else %}
+                <td>{{ defult }}</td>
+            {% endif %}
+            <td>{{ article.pu_time }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
