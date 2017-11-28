@@ -1,7 +1,11 @@
 #coding:utf8
 from flask import Flask,render_template,views,request
-from sqlalchemy_demo import Articles,session,Author
+#使用sqlalchemy实现功能
+#from sqlalchemy_demo import Articles,session,Author
+
 from sqlalchemy.orm import sessionmaker
+#使用alembic实现功能
+from alembic_demo import Author,Articles,session,Tag
 app = Flask(__name__)
 
 
@@ -15,19 +19,25 @@ def index():
     return render_template('index.html',**context)
 class Pull_articles(views.MethodView):
     def get(self):
-        return render_template('pull.html')
+        tags = session.query(Tag).all()
+        return render_template('pull.html',tags=tags)
     def post(self):
         title = request.form.get('title')
         detail = request.form.get('content')
         author = request.form.get('author')
-
-
-
-        auth = session.query(Author).filter(Author.name==author).first()
-        if not auth:
+        tags = request.form.getlist('tag')
+        print type(tags)
+        tagmodels= []
+        for tag_id in tags:
+            tag_model = session.query(Tag).get(tag_id)
+            print tag_model
+            tagmodels.append(tag_model)
+        authors = session.query(Author).filter(Author.name==author).first()
+        if not authors:
             authors = Author(name=author)
         article = Articles(title=title, detail=detail)
-        article.author = auth
+        article.author = authors
+        article.tag = tagmodels
         session.add(article)
         session.commit()
 

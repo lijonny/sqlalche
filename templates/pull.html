@@ -14,9 +14,15 @@
             <input type="text" name="title" ><br>
             <label for="">文章作者</label>
             <input type="text" name="author"><br>
+            <label for="">文章类别</label>
+            {% if tags %}
+                {% for tag in tags %}
+                   <input type="checkbox" name="tag" value="{{ tag.id }}" >{{ tag.name }}
+                {% endfor %}
+            {% endif %}
             <div>
                 <label for="">文章内容</label>
-                <textarea name="content" id="" cols="200" rows="50"></textarea>
+                <textarea name="content" id="" cols="200" rows="45"></textarea>
             </div>
             <input type="submit" value="发布文章">
         </form>
